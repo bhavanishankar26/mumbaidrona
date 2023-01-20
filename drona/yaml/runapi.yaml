@@ -1,0 +1,123 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.27.0 (b0ed6a2c9)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: runapi
+  name: runapi
+spec:
+  ports:
+    - name: "9595"
+      port: 9595
+      targetPort: 9595
+  selector:
+    io.kompose.service: runapi
+status:
+  loadBalancer: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.27.0 (b0ed6a2c9)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: runapi
+  name: runapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: runapi
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.27.0 (b0ed6a2c9)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: runapi
+    spec:
+      containers:
+        - image: dronahq/dronahq-self-hosted-runapi
+          name: dronahq-self-hosted-runapi
+          ports:
+            - containerPort: 9595
+          resources: {}
+          volumeMounts:
+            - mountPath: /app/.env
+              name: runapi-claim0
+              readOnly: true
+            - mountPath: /app/files
+              name: runapi-claim1
+            - mountPath: /app/private
+              name: runapi-claim2
+      restartPolicy: Always
+      volumes:
+        - name: runapi-claim0
+          persistentVolumeClaim:
+            claimName: runapi-claim0
+            readOnly: true
+        - name: runapi-claim1
+          persistentVolumeClaim:
+            claimName: runapi-claim1
+        - name: runapi-claim2
+          persistentVolumeClaim:
+            claimName: runapi-claim2
+status: {}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: runapi-claim2
+  name: runapi-claim2
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: runapi-claim1
+  name: runapi-claim1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: runapi-claim0
+  name: runapi-claim0
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 100Mi
+status: {}

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yaml
+    kompose.version: 1.27.0 (b0ed6a2c9)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: module1
+  name: module1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: module1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yaml
+        kompose.version: 1.27.0 (b0ed6a2c9)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: module1
+    spec:
+      containers:
+        - image: module1
+          name: dronahq-module1
+          ports:
+            - containerPort: 8090
+          resources: {}
+          volumeMounts:
+            - mountPath: /app/.env
+              name: module1-claim0
+              readOnly: true
+      restartPolicy: Always
+      volumes:
+        - name: module1-claim0
+          persistentVolumeClaim:
+            claimName: module1-claim0
+            readOnly: true
+status: {}

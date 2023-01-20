@@ -1,0 +1,109 @@
+version: "3"
+
+services:
+
+  mysqldb:
+    image: mysql:oracle
+    container_name: dronahq-self-hosted-mysqldb
+    restart: always
+    env_file: dronahq.env
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./init/mysql-init.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+      - ./storage/mysql:/var/lib/mysql
+      - ./init/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+    ports:
+      - 3306:3306
+
+  mongodb:
+    image: mongo:5.0.11
+    container_name: dronahq-self-hosted-mongodb
+    restart: always
+    env_file: dronahq.env
+    volumes:
+      - ./init/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
+      - ./init/mongodump:/mongodump
+      - ./storage/mongodb:/data/db
+    ports:
+      - 27017:27017
+
+  webserver:
+    image: nginx
+    container_name: dronahq-self-hosted-webserver
+    restart: always
+    env_file:
+      - dronahq.env
+    volumes:
+      - ./nginx.conf:/etc/nginx/templates/default.conf.template:ro
+      - ./storage/certbot/www:/var/www/certbot/:ro
+      - ./storage/certbot/conf/:/etc/nginx/ssl/:ro
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:80
+
+  auditlog:
+    image: dronahq/dronahq-self-hosted-auditlog
+    container_name: dronahq-self-hosted-auditlog
+    restart: always
+    volumes:
+      - ./dronahq.env:/app/.env:ro
+      - ./storage/files:/app/files:rw
+      - ./storage/private:/app/private:rw
+    ports:
+      - 9591:9591
+
+  builder:
+    image: dronahq/dronahq-self-hosted-builder
+    container_name: dronahq-self-hosted-builder
+    restart: always
+    volumes:
+      - ./dronahq.env:/app/.env:ro
+      - ./storage/files:/app/files:rw
+      - ./storage/private:/app/private:rw
+    ports:
+      - 9592:9592
+
+  device-api:
+    image: dronahq/dronahq-self-hosted-device-api
+    container_name: dronahq-self-hosted-device-api
+    restart: always
+    volumes:
+      - ./dronahq.env:/app/.env:ro
+      - ./storage/files:/app/files:rw
+      - ./storage/private:/app/private:rw
+    ports:
+      - 9593:9593
+
+  file-repository:
+    image: dronahq/dronahq-self-hosted-file-repository
+    container_name: dronahq-self-hosted-file-repository
+    restart: always
+    volumes:
+      - ./dronahq.env:/app/.env:ro
+      - ./storage/files:/app/files:rw
+      - ./storage/private:/app/private:rw
+    ports:
+      - 9594:9594
+
+  runapi:
+    image: dronahq/dronahq-self-hosted-runapi
+    container_name: dronahq-self-hosted-runapi
+    restart: always
+    volumes:
+      - ./dronahq.env:/app/.env:ro
+      - ./storage/files:/app/files:rw
+      - ./storage/private:/app/private:rw
+    ports:
+      - 9595:9595
+
+  webapp:
+    image: dronahq/dronahq-self-hosted-webapp
+    container_name: dronahq-self-hosted-webapp
+    restart: always
+    volumes:
+      - ./dronahq.env:/app/.env:ro
+      - ./storage/files:/app/files:rw
+      - ./storage/private:/app/private:rw
+    ports:
+      - 9596:9596

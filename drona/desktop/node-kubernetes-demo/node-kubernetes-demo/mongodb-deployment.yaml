@@ -1,0 +1,144 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yaml
+    kompose.version: 1.27.0 (b0ed6a2c9)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mongodb
+  name: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mongodb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yaml
+        kompose.version: 1.27.0 (b0ed6a2c9)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: mongodb
+    spec:
+      containers:
+        - env:
+            - name: DHQ_MONGODB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MONGODB_DATABASE
+                  name: app-env
+            - name: DHQ_MONGODB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MONGODB_HOST
+                  name: app-env
+            - name: DHQ_MONGODB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MONGODB_PASSWORD
+                  name: app-env
+            - name: DHQ_MONGODB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MONGODB_PORT
+                  name: app-env
+            - name: DHQ_MONGODB_USER
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MONGODB_USER
+                  name: app-env
+            - name: DHQ_MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MYSQL_DATABASE
+                  name: app-env
+            - name: DHQ_MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MYSQL_HOST
+                  name: app-env
+            - name: DHQ_MYSQL_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MYSQL_PASSWORD
+                  name: app-env
+            - name: DHQ_MYSQL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MYSQL_PORT
+                  name: app-env
+            - name: DHQ_MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MYSQL_USER
+                  name: app-env
+            - name: MONGO_INITDB_PWD
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_INITDB_PWD
+                  name: app-env
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_INITDB_ROOT_PASSWORD
+                  name: app-env
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_INITDB_ROOT_USERNAME
+                  name: app-env
+            - name: MONGO_INITDB_USER
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_INITDB_USER
+                  name: app-env
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  key: MYSQL_DATABASE
+                  name: app-env
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: MYSQL_PASSWORD
+                  name: app-env
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: MYSQL_ROOT_PASSWORD
+                  name: app-env
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  key: MYSQL_USER
+                  name: app-env
+          image: mongo:5.0.11
+          name: dronahq-module-mongodb
+          ports:
+            - containerPort: 27017
+          resources: {}
+          volumeMounts:
+            - mountPath: /docker-entrypoint-initdb.d/mongo-init.sh
+              name: mongodb-claim0
+              readOnly: true
+            - mountPath: /mongodump
+              name: mongodb-claim1
+            - mountPath: /data/db
+              name: mongodb-claim2
+      restartPolicy: Always
+      volumes:
+        - name: mongodb-claim0
+          persistentVolumeClaim:
+            claimName: mongodb-claim0
+            readOnly: true
+        - name: mongodb-claim1
+          persistentVolumeClaim:
+            claimName: mongodb-claim1
+        - name: mongodb-claim2
+          persistentVolumeClaim:
+            claimName: mongodb-claim2
+status: {}

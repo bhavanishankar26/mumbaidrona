@@ -1,0 +1,283 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.27.0 (b0ed6a2c9)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mysqldb
+  name: mysqldb
+spec:
+  ports:
+    - name: "3306"
+      port: 3306
+      targetPort: 3306
+  selector:
+    io.kompose.service: mysqldb
+status:
+  loadBalancer: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.27.0 (b0ed6a2c9)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mysqldb
+  name: mysqldb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mysqldb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.27.0 (b0ed6a2c9)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: mysqldb
+    spec:
+      containers:
+        - args:
+            - --default-authentication-plugin=mysql_native_password
+          env:
+            - name: AUDITLOG_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: AUDITLOG_URL
+                  name: dronahq-env
+            - name: BUILDER_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: BUILDER_URL
+                  name: dronahq-env
+            - name: DEVICEAPI_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: DEVICEAPI_URL
+                  name: dronahq-env
+            - name: DHQ_AUDIT_LOG_MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_AUDIT_LOG_MYSQL_DATABASE
+                  name: dronahq-env
+            - name: DHQ_AUDIT_LOG_MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_AUDIT_LOG_MYSQL_HOST
+                  name: dronahq-env
+            - name: DHQ_AUDIT_LOG_MYSQL_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_AUDIT_LOG_MYSQL_PASSWORD
+                  name: dronahq-env
+            - name: DHQ_AUDIT_LOG_MYSQL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_AUDIT_LOG_MYSQL_PORT
+                  name: dronahq-env
+            - name: DHQ_AUDIT_LOG_MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_AUDIT_LOG_MYSQL_USER
+                  name: dronahq-env
+            - name: DHQ_MONGODB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MONGODB_DATABASE
+                  name: dronahq-env
+            - name: DHQ_MONGODB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MONGODB_HOST
+                  name: dronahq-env
+            - name: DHQ_MONGODB_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MONGODB_PASSWORD
+                  name: dronahq-env
+            - name: DHQ_MONGODB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MONGODB_PORT
+                  name: dronahq-env
+            - name: DHQ_MONGODB_USER
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MONGODB_USER
+                  name: dronahq-env
+            - name: DHQ_MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MYSQL_DATABASE
+                  name: dronahq-env
+            - name: DHQ_MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MYSQL_HOST
+                  name: dronahq-env
+            - name: DHQ_MYSQL_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MYSQL_PASSWORD
+                  name: dronahq-env
+            - name: DHQ_MYSQL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MYSQL_PORT
+                  name: dronahq-env
+            - name: DHQ_MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  key: DHQ_MYSQL_USER
+                  name: dronahq-env
+            - name: FILEREPOSITORY_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: FILEREPOSITORY_URL
+                  name: dronahq-env
+            - name: LICENSE_KEY
+              valueFrom:
+                configMapKeyRef:
+                  key: LICENSE_KEY
+                  name: dronahq-env
+            - name: MONGO_INITDB_PWD
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_INITDB_PWD
+                  name: dronahq-env
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_INITDB_ROOT_PASSWORD
+                  name: dronahq-env
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_INITDB_ROOT_USERNAME
+                  name: dronahq-env
+            - name: MONGO_INITDB_USER
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_INITDB_USER
+                  name: dronahq-env
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  key: MYSQL_DATABASE
+                  name: dronahq-env
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: MYSQL_PASSWORD
+                  name: dronahq-env
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: MYSQL_ROOT_PASSWORD
+                  name: dronahq-env
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  key: MYSQL_USER
+                  name: dronahq-env
+            - name: RUNAPI_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: RUNAPI_URL
+                  name: dronahq-env
+            - name: SSL_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  key: SSL_DOMAIN
+                  name: dronahq-env
+            - name: WEBAPP_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: WEBAPP_URL
+                  name: dronahq-env
+          image: mysql:oracle
+          name: dronahq-self-hosted-mysqldb
+          ports:
+            - containerPort: 3306
+          resources: {}
+          volumeMounts:
+            - mountPath: /docker-entrypoint-initdb.d/schema.sql
+              name: mysqldb-claim0
+              readOnly: true
+            - mountPath: /var/lib/mysql
+              name: mysqldb-claim1
+            - mountPath: /etc/mysql/conf.d/my.cnf
+              name: mysqldb-claim2
+              readOnly: true
+      restartPolicy: Always
+      volumes:
+        - name: mysqldb-claim0
+          persistentVolumeClaim:
+            claimName: mysqldb-claim0
+            readOnly: true
+        - name: mysqldb-claim1
+          persistentVolumeClaim:
+            claimName: mysqldb-claim1
+        - name: mysqldb-claim2
+          persistentVolumeClaim:
+            claimName: mysqldb-claim2
+            readOnly: true
+status: {}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mysqldb-claim2
+  name: mysqldb-claim2
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mysqldb-claim1
+  name: mysqldb-claim1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mysqldb-claim0
+  name: mysqldb-claim0
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 100Mi
+status: {}

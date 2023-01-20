@@ -1,0 +1,23 @@
+{
+  "name": "kubernetes-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./index.js",
+    "build": "sudo docker build . -f module1.Dockerfile -t module1 && sudo docker build . -f module2.Dockerfile -t module2",
+    "start:docker": "sudo docker-compose up -d"
+  },
+  "author": "rahulgharat",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv-safe": "^8.2.0",
+    "express": "^4.18.2",
+    "mongo": "^0.1.0",
+    "mysql": "^2.18.1"
+  }
+}

@@ -1,0 +1,39 @@
+apiVersion: v1
+data:
+  AUDITLOG_URL: http://dronahq-self-hosted-auditlog:9591
+  BUILDER_URL: http://localhost
+  DEVICEAPI_URL: http://dronahq-self-hosted-device-api:9593
+  DHQ_AUDIT_LOG_MYSQL_DATABASE: dhq_audit_log
+  DHQ_AUDIT_LOG_MYSQL_HOST: dronahq-self-hosted-mysqldb
+  DHQ_AUDIT_LOG_MYSQL_PASSWORD: mypassword
+  DHQ_AUDIT_LOG_MYSQL_PORT: "3306"
+  DHQ_AUDIT_LOG_MYSQL_USER: dronahq
+  DHQ_MONGODB_DATABASE: db5x_studio
+  DHQ_MONGODB_HOST: dronahq-self-hosted-mongodb
+  DHQ_MONGODB_PASSWORD: mypassword
+  DHQ_MONGODB_PORT: "27017"
+  DHQ_MONGODB_USER: dronahq
+  DHQ_MYSQL_DATABASE: db5x
+  DHQ_MYSQL_HOST: dronahq-self-hosted-mysqldb
+  DHQ_MYSQL_PASSWORD: mypassword
+  DHQ_MYSQL_PORT: "3306"
+  DHQ_MYSQL_USER: dronahq
+  FILEREPOSITORY_URL: http://dronahq-self-hosted-file-repository:9594
+  LICENSE_KEY: CEAFE72D-B705-11EC-A3C7-0A62665F1D4F
+  MONGO_INITDB_PWD: mypassword
+  MONGO_INITDB_ROOT_PASSWORD: myrootpassword
+  MONGO_INITDB_ROOT_USERNAME: root
+  MONGO_INITDB_USER: dronahq
+  MYSQL_DATABASE: db5x
+  MYSQL_PASSWORD: mypassword
+  MYSQL_ROOT_PASSWORD: myrootpassword
+  MYSQL_USER: dronahq
+  RUNAPI_URL: http://dronahq-self-hosted-runapi:9595
+  SSL_DOMAIN: localhost
+  WEBAPP_URL: http://dronahq-self-hosted-webapp:9596
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mongodb-dronahq-env
+  name: dronahq-env

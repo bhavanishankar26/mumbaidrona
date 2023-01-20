@@ -1,0 +1,123 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.27.0 (b0ed6a2c9)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: webapp
+  name: webapp
+spec:
+  ports:
+    - name: "9596"
+      port: 9596
+      targetPort: 9596
+  selector:
+    io.kompose.service: webapp
+status:
+  loadBalancer: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.27.0 (b0ed6a2c9)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: webapp
+  name: webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: webapp
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.27.0 (b0ed6a2c9)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: webapp
+    spec:
+      containers:
+        - image: dronahq/dronahq-self-hosted-webapp
+          name: dronahq-self-hosted-webapp
+          ports:
+            - containerPort: 9596
+          resources: {}
+          volumeMounts:
+            - mountPath: /app/.env
+              name: webapp-claim0
+              readOnly: true
+            - mountPath: /app/files
+              name: webapp-claim1
+            - mountPath: /app/private
+              name: webapp-claim2
+      restartPolicy: Always
+      volumes:
+        - name: webapp-claim0
+          persistentVolumeClaim:
+            claimName: webapp-claim0
+            readOnly: true
+        - name: webapp-claim1
+          persistentVolumeClaim:
+            claimName: webapp-claim1
+        - name: webapp-claim2
+          persistentVolumeClaim:
+            claimName: webapp-claim2
+status: {}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: webapp-claim2
+  name: webapp-claim2
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: webapp-claim1
+  name: webapp-claim1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: webapp-claim0
+  name: webapp-claim0
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
